@@ -86,7 +86,6 @@ class SpriteSheetAnimationState extends AnimationClipState implements ISpriteShe
 	 */
 	override private function updateFrames():Void
 	{
- if(paused) return;
 		if (_forcedFrame) {
 			_forcedFrame = false;
 			return;

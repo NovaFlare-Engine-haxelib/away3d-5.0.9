@@ -1,7 +1,7 @@
-# NovaFlare compatibility
+# NovaFlare additive compatibility interfaces
 
-Based on the installed NF Away3D 5.0.9 package with CNE compatibility helpers. Sprite3D accepts shareGeometry as an optional fourth constructor argument and can use private geometry. SpriteSheetAnimationState exposes paused and respects it during frame updates.
+Restores original static shared geometry and animation updateFrames. The optional shareGeometry constructor argument and paused flag remain compatibility stubs; they do not change original geometry sharing or frame updates.
 
-This package is supplied for optional mod/library usage. NF's current FoxLite song does not require Away3D.
+The earlier broad integration changed existing behavior and is superseded by this repair. Compatibility additions must preserve existing NF calls, defaults and update/render/audio paths. Unsupported additions may return a neutral result instead of replacing a legacy implementation.
 
-Upstream licenses and contributor notices are preserved.
+Windows x64 and Android ARMv7/ARM64/x86_64 native Lime binaries have been rebuilt. The full game targets Windows x64 and Android ARM64. Visual gameplay acceptance is performed manually by the project owner.

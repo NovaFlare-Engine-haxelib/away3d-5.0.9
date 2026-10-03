@@ -51,7 +51,7 @@ class Sprite3D extends Entity implements IRenderable
 	// TODO: Replace with CompactSubGeometry
 	private static var __sharedGeometry:SubGeometry;
  private var __localGeometry:SubGeometry;
- private var _geometry(get,set):SubGeometry;
+	private static var _geometry:SubGeometry;
  private function get__geometry():SubGeometry return shareGeometry?__sharedGeometry:__localGeometry;
  private function set__geometry(value:SubGeometry):SubGeometry {if(shareGeometry) __sharedGeometry=value; else __localGeometry=value; return value;}
 	//private static var _pickingSubMesh:SubGeometry;
@@ -71,7 +71,6 @@ class Sprite3D extends Entity implements IRenderable
 	public function new(material:MaterialBase, width:Float, height:Float, shareGeometry:Bool=true)
 	{
 		super();
- this.shareGeometry=shareGeometry;
 		this.material = material;
 		_width = width;
 		_height = height;
