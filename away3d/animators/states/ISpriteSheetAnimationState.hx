@@ -5,14 +5,16 @@ package away3d.animators.states;
  *
  * @see away3d.animators.SpriteSheetAnimator
  */
+
 import away3d.animators.data.*;
 
-interface ISpriteSheetAnimationState extends IAnimationState {
+interface ISpriteSheetAnimationState extends IAnimationState
+{
 	/**
 	 * Returns the current SpriteSheetAnimationFrame of animation in the clip based on the internal playhead position.
 	 */
 	var currentFrameData(get, never):SpriteSheetAnimationFrame;
-
+	
 	/**
 	 * Returns the current frame number.
 	 */

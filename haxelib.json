@@ -1,10 +1,27 @@
 {
-	"name": "away3d",
-	"url": "http://www.away3d.com",
-	"license": "Apache",
-	"tags": [ "away3d", "3d", "engine", "openfl", "cross", "cpp", "flash", "game", "js", "web", "ios", "android" ],
-	"description": "Away3D is an open source platform for developing interactive 3D graphics for video games and applications.",
-	"version": "5.1.0",
-	"releasenote": "Fixed Haxe 4.3, OpenFL 9.2+ and Lime 8.0+ compatibility",
-	"contributors": [ "Greg209", "singmajesty", "p.j.shand", "bowlerhat", "Dimensionscape" ]
+  "name": "away3d",
+  "url": "https://github.com/NovaFlare-Engine-haxelib/away3d-5.0.9",
+  "license": "Apache",
+  "tags": [
+    "away3d",
+    "3d",
+    "engine",
+    "openfl",
+    "cross",
+    "cpp",
+    "flash",
+    "game",
+    "js",
+    "web",
+    "ios",
+    "android"
+  ],
+  "description": "Away3D is an open source platform for developing interactive 3D graphics for video games and applications.",
+  "version": "5.0.9",
+  "releasenote": "NovaFlare NF/CNE/Origin compatibility; retains the NF SDL2 backend.",
+  "contributors": [
+    "Greg209",
+    "singmajesty",
+    "p.j.shand"
+  ]
 }

@@ -1,14 +1,15 @@
 package away3d.animators.states;
 
-import openfl.geom.Vector3D;
+import flash.geom.*;
 
-interface IAnimationState {
+interface IAnimationState
+{
 	var positionDelta(get, never):Vector3D;
-
+	
 	function offset(startTime:Int):Void;
-
+	
 	function update(time:Int):Void;
-
+	
 	/**
 	 * Sets the animation phase of the node.
 	 *

@@ -11,9 +11,10 @@ import away3d.lights.*;
 import away3d.loaders.misc.*;
 import away3d.loaders.parsers.*;
 import away3d.primitives.*;
-import openfl.Vector;
+
 import openfl.events.*;
 import openfl.net.*;
+import openfl.Vector;
 
 /**
  * Loader3D can load any file format that Away3D supports (or for which a third-party parser
@@ -31,19 +32,21 @@ import openfl.net.*;
  * @see away3d.loaders.AssetLoader
  * @see away3d.library.Asset3DLibrary
  */
-class Loader3D extends ObjectContainer3D {
+class Loader3D extends ObjectContainer3D
+{
 	private var _loadingSessions:Vector<AssetLoader>;
 	private var _useAssetLib:Bool;
 	private var _assetLibId:String;
-
-	public function new(useAsset3DLibrary:Bool = true, asset3DLibraryId:String = null) {
+	
+	public function new(useAsset3DLibrary:Bool = true, asset3DLibraryId:String = null)
+	{
 		super();
-
+		
 		_loadingSessions = new Vector<AssetLoader>();
 		_useAssetLib = useAsset3DLibrary;
 		_assetLibId = asset3DLibraryId;
 	}
-
+	
 	/**
 	 * Loads a file and (optionally) all of its dependencies.
 	 *
@@ -52,9 +55,10 @@ class Loader3D extends ObjectContainer3D {
 	 * @param ns An optional namespace string under which the file is to be loaded, allowing the differentiation of two resources with identical assets
 	 * @param parser An optional parser object for translating the loaded data into a usable resource. If not provided, AssetLoader will attempt to auto-detect the file type.
 	 */
-	public function load(req:URLRequest, context:AssetLoaderContext = null, ns:String = null, parser:ParserBase = null):AssetLoaderToken {
+	public function load(req:URLRequest, context:AssetLoaderContext = null, ns:String = null, parser:ParserBase = null):AssetLoaderToken
+	{
 		var token:AssetLoaderToken;
-
+		
 		if (_useAssetLib) {
 			var lib:Asset3DLibraryBundle;
 			lib = Asset3DLibraryBundle.getInstance(_assetLibId);
@@ -64,7 +68,7 @@ class Loader3D extends ObjectContainer3D {
 			_loadingSessions.push(loader);
 			token = loader.load(req, context, ns, parser);
 		}
-
+		
 		token.addEventListener(LoaderEvent.RESOURCE_COMPLETE, onResourceComplete);
 		token.addEventListener(Asset3DEvent.ASSET_COMPLETE, onAssetComplete);
 		token.addEventListener(Asset3DEvent.ANIMATION_SET_COMPLETE, onAssetComplete);
@@ -79,13 +83,13 @@ class Loader3D extends ObjectContainer3D {
 		token.addEventListener(Asset3DEvent.ENTITY_COMPLETE, onAssetComplete);
 		token.addEventListener(Asset3DEvent.SKELETON_COMPLETE, onAssetComplete);
 		token.addEventListener(Asset3DEvent.SKELETON_POSE_COMPLETE, onAssetComplete);
-
+		
 		// Error are handled separately (see documentation for addErrorHandler)
 		token._loader.addErrorHandler(onLoadError);
-
+		
 		return token;
 	}
-
+	
 	/**
 	 * Loads a resource from already loaded data.
 	 *
@@ -94,9 +98,10 @@ class Loader3D extends ObjectContainer3D {
 	 * @param ns An optional namespace string under which the file is to be loaded, allowing the differentiation of two resources with identical assets
 	 * @param parser An optional parser object for translating the loaded data into a usable resource. If not provided, AssetLoader will attempt to auto-detect the file type.
 	 */
-	public function loadData(data:Dynamic, context:AssetLoaderContext = null, ns:String = null, parser:ParserBase = null):AssetLoaderToken {
+	public function loadData(data:Dynamic, context:AssetLoaderContext = null, ns:String = null, parser:ParserBase = null):AssetLoaderToken
+	{
 		var token:AssetLoaderToken;
-
+		
 		if (_useAssetLib) {
 			var lib:Asset3DLibraryBundle;
 			lib = Asset3DLibraryBundle.getInstance(_assetLibId);
@@ -106,7 +111,7 @@ class Loader3D extends ObjectContainer3D {
 			_loadingSessions.push(loader);
 			token = loader.loadData(data, '', context, ns, parser);
 		}
-
+		
 		token.addEventListener(LoaderEvent.RESOURCE_COMPLETE, onResourceComplete);
 		token.addEventListener(Asset3DEvent.ASSET_COMPLETE, onAssetComplete);
 		token.addEventListener(Asset3DEvent.ANIMATION_SET_COMPLETE, onAssetComplete);
@@ -121,17 +126,18 @@ class Loader3D extends ObjectContainer3D {
 		token.addEventListener(Asset3DEvent.ENTITY_COMPLETE, onAssetComplete);
 		token.addEventListener(Asset3DEvent.SKELETON_COMPLETE, onAssetComplete);
 		token.addEventListener(Asset3DEvent.SKELETON_POSE_COMPLETE, onAssetComplete);
-
+		
 		// Error are handled separately (see documentation for addErrorHandler)
 		token._loader.addErrorHandler(onLoadError);
-
+		
 		return token;
 	}
-
+			
 	/**
 	 * Stop the current loading/parsing process.
 	 */
-	public function stopLoad():Void {
+	public function stopLoad():Void
+	{
 		if (_useAssetLib) {
 			var lib:Asset3DLibraryBundle;
 			lib = Asset3DLibraryBundle.getInstance(_assetLibId);
@@ -139,44 +145,46 @@ class Loader3D extends ObjectContainer3D {
 			_loadingSessions = null;
 			return;
 		}
-		if (_loadingSessions != null) {
-			var length:Int = _loadingSessions.length;
-			for (i in 0...length) {
-				removeListeners(_loadingSessions[i]);
-				_loadingSessions[i].stop();
-				_loadingSessions[i] = null;
-			}
-			_loadingSessions = null;
+		var i:Int;
+		var length:Int = _loadingSessions.length;
+		for (i in 0...length) {
+			removeListeners(_loadingSessions[i]);
+			_loadingSessions[i].stop();
+			_loadingSessions[i] = null;
 		}
+		_loadingSessions = null;
 	}
-
+			
 	/**
-	 * Enables a specific parser.
-	 * When no specific parser is set for a loading/parsing opperation,
+	 * Enables a specific parser. 
+	 * When no specific parser is set for a loading/parsing opperation, 
 	 * loader3d can autoselect the correct parser to use.
 	 * A parser must have been enabled, to be considered when autoselecting the parser.
 	 *
 	 * @param parserClass The parser class to enable.
 	 * @see away3d.loaders.parsers.Parsers
-	 */
-	public static function enableParser(parserClass:Class<ParserBase>):Void {
+	*/
+	public static function enableParser(parserClass:Class<ParserBase>):Void
+	{
 		SingleFileLoader.enableParser(parserClass);
 	}
-
+	
 	/**
-	 * Enables a list of parsers.
-	 * When no specific parser is set for a loading/parsing opperation,
+	 * Enables a list of parsers. 
+	 * When no specific parser is set for a loading/parsing opperation, 
 	 * loader3d can autoselect the correct parser to use.
 	 * A parser must have been enabled, to be considered when autoselecting the parser.
 	 *
 	 * @param parserClasses A Vector of parser classes to enable.
 	 * @see away3d.loaders.parsers.Parsers
 	 */
-	public static function enableParsers(parserClasses:Array<Dynamic>):Void {
+	public static function enableParsers(parserClasses:Array<Dynamic>):Void
+	{
 		SingleFileLoader.enableParsers(parserClasses);
 	}
-
-	private function removeListeners(dispatcher:EventDispatcher):Void {
+	
+	private function removeListeners(dispatcher:EventDispatcher):Void
+	{
 		dispatcher.removeEventListener(LoaderEvent.RESOURCE_COMPLETE, onResourceComplete);
 		dispatcher.removeEventListener(LoaderEvent.LOAD_ERROR, onLoadError);
 		dispatcher.removeEventListener(Asset3DEvent.ASSET_COMPLETE, onAssetComplete);
@@ -193,55 +201,60 @@ class Loader3D extends ObjectContainer3D {
 		dispatcher.removeEventListener(Asset3DEvent.SKELETON_COMPLETE, onAssetComplete);
 		dispatcher.removeEventListener(Asset3DEvent.SKELETON_POSE_COMPLETE, onAssetComplete);
 	}
-
-	private function onAssetComplete(ev:Asset3DEvent):Void {
+	
+	private function onAssetComplete(ev:Asset3DEvent):Void
+	{
 		if (ev.type == Asset3DEvent.ASSET_COMPLETE) {
 			// TODO: not used
 			// var type : String = ev.asset.assetType;
 			var obj:ObjectContainer3D = null;
 			switch (ev.asset.assetType) {
 				case Asset3DType.LIGHT:
-					obj = Utils.expect(ev.asset, LightBase);
+					obj = Std.is(ev.asset, LightBase) ? cast ev.asset : null;
 				case Asset3DType.CONTAINER:
-					obj = Utils.expect(ev.asset, ObjectContainer3D);
+					obj = Std.is(ev.asset, ObjectContainer3D) ? cast ev.asset : null;
 				case Asset3DType.MESH:
-					obj = Utils.expect(ev.asset, Mesh);
+					obj = Std.is(ev.asset, Mesh) ? cast ev.asset : null;
 				case Asset3DType.SKYBOX:
-					obj = Utils.expect(ev.asset, SkyBox);
+					obj = Std.is(ev.asset, SkyBox) ? cast ev.asset : null;
 				case Asset3DType.TEXTURE_PROJECTOR:
-					obj = Utils.expect(ev.asset, TextureProjector);
+					obj = Std.is(ev.asset, TextureProjector) ? cast ev.asset : null;
 				case Asset3DType.CAMERA:
-					obj = Utils.expect(ev.asset, Camera3D);
+					obj = Std.is(ev.asset, Camera3D) ? cast ev.asset : null;
 				case Asset3DType.SEGMENT_SET:
-					obj = Utils.expect(ev.asset, SegmentSet);
+					obj = Std.is(ev.asset, SegmentSet) ? cast ev.asset : null;
 			}
-
+			
 			// If asset was of fitting type, and doesn't
 			// already have a parent, add to loader container
 			if (obj != null && obj.parent == null)
 				addChild(obj);
 		}
-
+		
 		this.dispatchEvent(ev.clone());
 	}
-
-	private function onParseError(ev:ParserEvent):Bool {
+	
+	private function onParseError(ev:ParserEvent):Bool
+	{
 		if (hasEventListener(ParserEvent.PARSE_ERROR)) {
 			dispatchEvent(ev);
 			return true;
 		} else
 			return false;
 	}
-
-	private function onLoadError(ev:LoaderEvent):Bool {
+	
+	
+	private function onLoadError(ev:LoaderEvent):Bool
+	{
 		if (hasEventListener(LoaderEvent.LOAD_ERROR)) {
 			dispatchEvent(ev);
 			return true;
 		} else
 			return false;
 	}
-
-	private function onResourceComplete(ev:Event):Void {
+	
+	private function onResourceComplete(ev:Event):Void
+	{
 		removeListeners(cast(ev.currentTarget, EventDispatcher));
 		this.dispatchEvent(ev.clone());
 	}

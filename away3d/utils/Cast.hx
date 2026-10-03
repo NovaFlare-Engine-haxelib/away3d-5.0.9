@@ -2,76 +2,83 @@ package away3d.utils;
 
 import away3d.errors.CastError;
 import away3d.textures.BitmapTexture;
+
 import haxe.io.Bytes;
-import openfl.Assets;
+import openfl.display.DisplayObject;
 import openfl.display.Bitmap;
 import openfl.display.BitmapData;
-import openfl.display.DisplayObject;
 import openfl.errors.Error;
 import openfl.geom.Matrix;
 import openfl.utils.ByteArray;
+import openfl.Assets;
 
 /** Helper class for casting assets to usable objects */
-class Cast {
+class Cast
+{
 	private static var _colorNames:Map<String, UInt>;
 	private static var _hexChars:String = "0123456789abcdefABCDEF";
-
+	
 	private static var _notClasses:Map<String, Bool> = new Map<String, Bool>();
 	private static var _classes:Map<String, Dynamic> = new Map<String, Dynamic>();
-
-	public static function string(data:Dynamic):String {
-		if (isOfType(data, Class))
+	
+	public static function string(data:Dynamic):String
+	{
+		if (Std.is(data, Class))
 			data = Type.createInstance(data, []);
-
-		if (isOfType(data, String))
+		
+		if (Std.is(data, String))
 			return data;
-
+		
 		return Std.string(data);
 	}
-
-	public static function byteArray(data:Dynamic):ByteArray {
-		if (isOfType(data, Class))
+	
+	public static function byteArray(data:Dynamic):ByteArray
+	{
+		if (Std.is(data, Class))
 			data = Type.createInstance(data, []);
-
-		if (isOfType(data, ByteArrayData))
+		
+		if (Std.is(data, ByteArrayData))
 			return data;
-
-		if (isOfType(data, Bytes))
+		
+		if (Std.is(data, Bytes))
 			return cast(data, ByteArray);
-
+		
 		return null;
 	}
-
+	
 	/*
-		public static function xml(data:Dynamic):XML
-		{
-			if (isOfType(data, Class))
-				data = Type.createInstance(data, []);
-
-			if (isOfType(data, XML))
-				return data;
-
-			return cast(data, XML);
-		}
-	 */
-	private static function isHex(string:String):Bool {
+	public static function xml(data:Dynamic):XML
+	{
+		if (Std.is(data, Class))
+			data = Type.createInstance(data, []);
+		
+		if (Std.is(data, XML))
+			return data;
+		
+		return cast(data, XML);
+	}
+	*/
+	
+	private static function isHex(string:String):Bool
+	{
 		var length:Int = string.length;
 		for (i in 0...length) {
 			if (_hexChars.indexOf(string.charAt(i)) == -1)
 				return false;
 		}
-
+		
 		return true;
 	}
-
-	public static function tryColor(data:Dynamic):Int {
-		if (isOfType(data, Int))
+	
+	public static function tryColor(data:Dynamic):Int
+	{
+		if (Std.is(data, Int))
 			return data;
-
-		if (isOfType(data, String)) {
+		
+		if (Std.is(data, String)) {
 			if (data == "random")
 				return Std.int(Math.random() * 0x1000000);
-
+			
 			if (_colorNames == null) {
 				_colorNames = new Map<String, UInt>();
 				_colorNames["steelblue"] = 0x4682B4;
@@ -216,71 +223,75 @@ class Cast {
 				_colorNames["black"] = 0x000000;
 				_colorNames["transparent"] = 0xFF000000;
 			}
-
+			
 			var dataString:String = data;
 			if (_colorNames.exists(data))
 				return _colorNames[data];
-
+			
 			if ((dataString.length == 6) && isHex(data))
 				return Std.parseInt("0x" + dataString);
 		}
-
+		
 		return 0xFFFFFF;
 	}
-
-	public static function color(data:Dynamic):Int {
+	
+	public static function color(data:Dynamic):Int
+	{
 		var result:Int = tryColor(data);
-
+		
 		if (result == 0xFFFFFFFF)
 			throw new CastError("Can't cast to color: " + data);
-
+		
 		return result;
 	}
-
-	public static function tryClass(name:String):Dynamic {
+	
+	public static function tryClass(name:String):Dynamic
+	{
 		if (_notClasses.exists(name))
 			return name;
-
+		
 		var result = _classes[name];
-
+		
 		if (result != null)
 			return result;
-
+		
 		try {
 			result = Type.resolveClass(name);
 			_classes[name] = result;
 			return result;
-		} catch (error:Dynamic) {}
-
+		} catch (error:Dynamic) {
+		}
+		
 		_notClasses[name] = true;
-
+		
 		return name;
 	}
-
-	public static function bitmapData(data:Dynamic):BitmapData {
+	
+	public static function bitmapData(data:Dynamic):BitmapData
+	{
 		if (data == null)
 			return null;
-
-		if (isOfType(data, String))
+		
+		if (Std.is(data, String))
 			data = Assets.getBitmapData(data);
-
-		if (isOfType(data, Class)) {
+		
+		if (Std.is(data, Class)) {
 			try {
 				data = Type.createInstance(data, []);
 			} catch (bitmapError:Dynamic) {
 				data = Type.createInstance(data, [0, 0]);
 			}
 		}
-
-		if (isOfType(data, BitmapData))
+		
+		if (Std.is(data, BitmapData))
 			return data;
-
-		if (isOfType(data, Bitmap)) {
+		
+		if (Std.is(data, Bitmap)) {
 			if (cast(data, Bitmap).bitmapData != null) // if (data is BitmapAsset)
 				return (cast(data, Bitmap)).bitmapData;
 		}
-
-		if (isOfType(data, DisplayObject)) {
+		
+		if (Std.is(data, DisplayObject)) {
 			var ds:DisplayObject = cast(data, DisplayObject);
 			var bmd:BitmapData = new BitmapData(Std.int(ds.width), Std.int(ds.height), true, 0x00FFFF);
 			var mat:Matrix = ds.transform.matrix.clone();
@@ -289,33 +300,35 @@ class Cast {
 			bmd.draw(ds, mat, ds.transform.colorTransform, ds.blendMode, bmd.rect, true);
 			return bmd;
 		}
-
+		
 		throw new CastError("Can't cast to BitmapData: " + data);
 	}
-
-	public static function bitmapTexture(data:Dynamic):BitmapTexture {
+	
+	public static function bitmapTexture(data:Dynamic):BitmapTexture
+	{
 		if (data == null)
 			return null;
-
-		if (isOfType(data, String))
+		
+		if (Std.is(data, String))
 			data = Assets.getBitmapData(data);
-
-		if (isOfType(data, Class)) {
+		
+		if (Std.is(data, Class)) {
 			try {
 				data = Type.createInstance(data, []);
 			} catch (materialError:Dynamic) {
 				data = Type.createInstance(data, [0, 0]);
 			}
 		}
-
-		if (isOfType(data, BitmapTexture))
+		
+		if (Std.is(data, BitmapTexture))
 			return data;
-
+		
 		try {
 			var bmd:BitmapData = Cast.bitmapData(data);
 			return new BitmapTexture(bmd);
-		} catch (error:CastError) {}
-
+		} catch (error:CastError) {
+		}
+		
 		throw new CastError("Can't cast to BitmapTexture: " + data);
 	}
 }

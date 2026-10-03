@@ -1,5 +1,6 @@
 package away3d.controllers;
 
+
 import away3d.entities.Entity;
 import away3d.errors.AbstractMethodError;
 
@@ -11,8 +12,7 @@ class ControllerBase {
 	private var _targetObject:Entity;
 
 	private function notifyUpdate():Void {
-		if (_targetObject != null && _targetObject.implicitPartition != null && _autoUpdate)
-			_targetObject.implicitPartition.markForUpdate(_targetObject);
+		if (_targetObject != null && _targetObject.implicitPartition != null && _autoUpdate) _targetObject.implicitPartition.markForUpdate(_targetObject);
 	}
 
 	/**
@@ -23,13 +23,10 @@ class ControllerBase {
 	}
 
 	private function set_targetObject(val:Entity):Entity {
-		if (_targetObject == val)
-			return val;
-		if (_targetObject != null && _autoUpdate)
-			_targetObject._controller = null;
+		if (_targetObject == val) return val;
+		if (_targetObject != null && _autoUpdate) _targetObject._controller = null;
 		_targetObject = val;
-		if (_targetObject != null && _autoUpdate)
-			_targetObject._controller = this;
+		if (_targetObject != null && _autoUpdate) _targetObject._controller = this;
 		notifyUpdate();
 		return val;
 	}
@@ -42,14 +39,11 @@ class ControllerBase {
 	}
 
 	private function set_autoUpdate(val:Bool):Bool {
-		if (_autoUpdate == val)
-			return val;
+		if (_autoUpdate == val) return val;
 		_autoUpdate = val;
 		if (_targetObject != null) {
-			if (_autoUpdate)
-				_targetObject._controller = this
-			else
-				_targetObject._controller = null;
+			if (_autoUpdate) _targetObject._controller = this
+			else _targetObject._controller = null;
 		}
 		return val;
 	}
@@ -62,6 +56,7 @@ class ControllerBase {
 	public function new(targetObject:Entity = null) {
 		_autoUpdate = true;
 		this.targetObject = targetObject;
+
 	}
 
 	/**
@@ -71,3 +66,4 @@ class ControllerBase {
 		throw new AbstractMethodError();
 	}
 }
+
